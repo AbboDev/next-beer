@@ -1,3 +1,39 @@
+# Test Tecnico - Next
+
+## Comandi
+
+```bash
+# Qualora non si disponesse di pnpm, è possibile installarlo lanciando il comando:
+# $ npm install -g pnpm
+# in alternativa, tutti i comandi possono essere eseguiti tramite npm
+
+# Installa le dipendenze
+$ pnpm install
+
+# Avvia Next in modalità HMR sulla porta 3000
+$ pnpm dev
+
+# Genera il sito statico
+$ pnpm build
+
+# Compila il sito ed avvia il server Node
+$ pnpm start
+```
+
+## Dettagli
+
+Da scrivere
+
+## TODO
+
+- **Sistemare README** \*
+- Organizzare file dentro cartella src/
+- Jest
+- Netlify (SSG)
+- [Commitizen](https://github.com/commitizen/cz-cli)
+
+---
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
