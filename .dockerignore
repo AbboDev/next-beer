@@ -1,0 +1,16 @@
+.husky/
+
+.next/
+
+.git/
+.gitignore
+
+.node_modules/
+
+.versionrc
+
+commitlint.config.js
+
+lint-staged.config.js
+
+README.md
