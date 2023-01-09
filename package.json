@@ -15,8 +15,6 @@
     "release:patch": "standard-version --release-as patch",
     "release:major": "standard-version --release-as major"
   },
-  "lint-staged": {
-  },
   "dependencies": {
     "@next/font": "13.1.1",
     "@types/node": "18.11.18",
@@ -36,6 +34,7 @@
     "@typescript-eslint/parser": "^5.48.1",
     "eslint-config-prettier": "^8.6.0",
     "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
     "prettier": "^2.8.2",
     "standard-version": "^9.5.0"
   }
