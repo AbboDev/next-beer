@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# TODO: install prettier and configure eslint with TS
+# pnpm lint-staged
