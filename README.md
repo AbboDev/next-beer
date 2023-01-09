@@ -32,6 +32,16 @@ Da scrivere
 - Netlify (SSG)
 - [Commitizen](https://github.com/commitizen/cz-cli)
 
+## Task
+
+Utilizzare NextJS per creare un'applicazione React ed effettuare chiamate API a PunkAPI ([https://punkapi.com/documentation/v2](https://punkapi.com/documentation/v2)) per recuperare l'elenco di birre presenti. Dovranno essere implementate anche le funzionalità di filtro e paginazione risultati.
+
+- **Creare un'applicazione NextJS che visualizzi un elenco di birre da PunkAPI.**
+- **Utilizzare TailwindCSS per dare stile alla pagina e renderla visivamente accattivante.**
+- **Consentire all'utente di filtrare l'elenco di birre per nome, ingredienti e abbinamenti suggeriti.**
+- **Implementare la paginazione per visualizzare solo un determinato numero di birre per volta (ad esempio, 10 birre per pagina).**
+- **Quando un utente clicca su una birra, visualizzare una finestra modale con informazioni dettagliate su quella birra (ad esempio, nome, ingredienti, metodo di produzione etc.).**
+
 ---
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
