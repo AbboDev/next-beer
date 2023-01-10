@@ -25,6 +25,7 @@ COPY .eslintrc.json ./
 COPY next-env.d.ts ./
 COPY next.config.js ./
 COPY tsconfig.json ./
+COPY tailwind.config.js ./
 
 EXPOSE $PORT
 
