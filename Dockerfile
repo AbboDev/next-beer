@@ -16,6 +16,7 @@ COPY pnpm-lock.yaml ./
 
 RUN pnpm install
 
+COPY components ./components
 COPY pages ./pages
 COPY public ./public
 COPY styles ./styles

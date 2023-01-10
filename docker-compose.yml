@@ -12,6 +12,7 @@ services:
     networks:
       - next-network
     volumes:
+      - ./components:/frontend/components
       - ./pages:/frontend/pages
       - ./public:/frontend/public
       - ./styles:/frontend/styles
