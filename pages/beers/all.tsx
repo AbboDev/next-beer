@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import Layout from '@/components/layout'
-import { GetStaticProps } from 'next'
+import { GetServerSideProps } from 'next'
 
 type Props = {
   beers: Beer[]
@@ -27,7 +27,7 @@ export default function All({ beers }: Props) {
   )
 }
 
-export const getStaticProps: GetStaticProps<Props> = async () => {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const beers: Beer[] = await fetch('https://api.punkapi.com/v2/beers').then(
     (response) => response.json()
   )
