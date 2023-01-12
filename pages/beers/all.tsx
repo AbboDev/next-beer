@@ -54,12 +54,13 @@ const fetchBeers = function <T>(params?: SearchStateQuery): Promise<T> {
 
 export default function All({ initialBeers }: Props) {
   const router = useRouter()
-  console.log(router.query)
 
   const [beers, setBeers] = useState(initialBeers)
 
+  const query: SearchStateQuery = router.query
+
   const [search, setSearch] = useState<SearchState>({
-    beerName: '',
+    beerName: query.beer_name || '',
   })
 
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
