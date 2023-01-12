@@ -11,7 +11,7 @@ export default function Logo({
   strokeWidth = 2,
   className,
 }: Props) {
-  let logoClassName = 'fill-none stroke-slate-600'
+  let logoClassName = 'fill-none stroke-slate-700'
 
   if (className) {
     logoClassName += ` ${className}`
