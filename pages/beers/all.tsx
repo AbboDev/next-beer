@@ -4,6 +4,8 @@ import { GetServerSideProps } from 'next'
 import H1 from '@/components/h1'
 import { useState, ChangeEvent } from 'react'
 import defaultImage from '@/public/default.png'
+import { useRouter } from 'next/router'
+// TODO: implement wretch library and/or integrated SWR for loading
 
 type Props = {
   initialBeers: Beer[]
@@ -17,10 +19,29 @@ type SearchStateQuery = {
   beer_name?: string
 }
 
-const fetchBeers = function <T>(params?: URLSearchParams): Promise<T> {
-  const url: URL = new URL(
-    `https://api.punkapi.com/v2/beers?${params?.toString()}`
-  )
+const fetchBeers = function <T>(params?: SearchStateQuery): Promise<T> {
+  let query = ''
+
+  if (params) {
+    /**
+     * The SearchStateQuery is parsed before toString() because Punk API
+     * gives errors when params are passed empty
+     */
+    const cleanObject: SearchStateQuery = Object.entries(params).reduce(
+      (cleanObject, [key, val]) => {
+        if (val) {
+          cleanObject[key as keyof SearchStateQuery] = val
+        }
+
+        return cleanObject
+      },
+      {} as SearchStateQuery
+    )
+
+    query = new URLSearchParams(cleanObject)?.toString()
+  }
+
+  const url: URL = new URL(`https://api.punkapi.com/v2/beers?${query}`)
 
   return fetch(url).then((response) => {
     if (!response.ok) {
@@ -32,6 +53,9 @@ const fetchBeers = function <T>(params?: URLSearchParams): Promise<T> {
 }
 
 export default function All({ initialBeers }: Props) {
+  const router = useRouter()
+  console.log(router.query)
+
   const [beers, setBeers] = useState(initialBeers)
 
   const [search, setSearch] = useState<SearchState>({
@@ -49,16 +73,16 @@ export default function All({ initialBeers }: Props) {
 
     setSearch(newSearch)
 
-    const objectParams: SearchStateQuery = {}
-    if (newSearch.beerName) {
-      objectParams.beer_name = newSearch.beerName
+    const objectParams: SearchStateQuery = {
+      beer_name: newSearch.beerName,
     }
 
-    const params = new URLSearchParams(objectParams)
+    router.replace({
+      query: { ...router.query, ...objectParams },
+    })
 
-    const beers: Beer[] = await fetchBeers(params)
+    const beers: Beer[] = await fetchBeers(objectParams)
 
-    console.debug(beers)
     setBeers(beers)
   }
 
@@ -140,8 +164,10 @@ export default function All({ initialBeers }: Props) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const beers: Beer[] = await fetchBeers<Beer[]>()
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  query,
+}) => {
+  const beers: Beer[] = await fetchBeers<Beer[]>(query)
 
   return {
     props: {
