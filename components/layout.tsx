@@ -55,7 +55,7 @@ export default function Layout({
 
       <main className={mainClassName}>{children}</main>
 
-      <footer className="text-center">
+      <footer className="text-center p-4 pb-8">
         Made with <span className="text-red-500">❤</span> by{' '}
         <CustomLink
           href="https://github.com/AbboDev/"
