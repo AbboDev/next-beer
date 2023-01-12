@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const StylelintPlugin = require('stylelint-webpack-plugin')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -18,6 +21,8 @@ const nextConfig = {
         aggregateTimeout: 300,
       }
     }
+
+    config.plugins.push(new StylelintPlugin())
 
     return config
   },

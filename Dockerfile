@@ -21,10 +21,14 @@ COPY pages ./pages
 COPY public ./public
 COPY styles ./styles
 
+COPY .stylelintrc ./
 COPY .eslintrc.json ./
+
 COPY next-env.d.ts ./
 COPY next.config.js ./
 COPY tsconfig.json ./
+COPY tailwind.config.js ./
+COPY postcss.config.js ./
 
 EXPOSE $PORT
 
