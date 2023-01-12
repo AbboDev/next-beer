@@ -23,7 +23,7 @@ export default function Layout({
     composedTitle = `${title} - ${composedTitle}`
   }
 
-  let mainClassName = 'max-w-screen-lg mx-auto py-4'
+  let mainClassName = 'max-w-screen-xl mx-auto py-4'
   if (className) {
     mainClassName += ` ${className}`
   }

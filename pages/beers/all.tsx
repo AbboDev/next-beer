@@ -36,7 +36,7 @@ export default function All({ beers }: Props) {
     <Layout title="Tutte le birre" className="text-center">
       <H1>Tutte le birre</H1>
 
-      <section className="grid grid-cols-4 gap-x-4 gap-y-4">
+      <section className="grid grid-cols-5 gap-x-4 gap-y-4">
         {beers.map(({ id, name, tagline, image_url, abv }) => (
           <div
             key={id}
