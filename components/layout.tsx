@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import Head from 'next/head'
 import Logo from '@/components/logo'
-import Link from 'next/link'
+import CustomLink from '@/components/link'
 
 export const siteTitle = 'Next Beer'
 
@@ -47,9 +47,9 @@ export default function Layout({
         </div>
 
         {!home && (
-          <Link href="/" className="justify-self-start">
+          <CustomLink href="/" className="justify-self-start">
             Torna alla home
-          </Link>
+          </CustomLink>
         )}
       </header>
 
@@ -57,14 +57,14 @@ export default function Layout({
 
       <footer className="text-center">
         Made with <span className="text-red-500">❤</span> by{' '}
-        <a
+        <CustomLink
           href="https://github.com/AbboDev/"
           target="_blank"
           rel="noreferrer"
           className="underline underline-offset-4 transition-colors hover:text-teal-400"
         >
           AbboDev
-        </a>
+        </CustomLink>
       </footer>
     </>
   )
