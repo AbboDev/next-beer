@@ -1,11 +1,12 @@
-import { ReactNode } from 'react'
+import { ReactNode, MouseEventHandler } from 'react'
 import Link from 'next/link'
 
 type Props = {
   children?: ReactNode
-  tag: string
+  tag?: string
   href?: string
   className?: string
+  onClick?: MouseEventHandler
 }
 
 export default function Button({
@@ -13,6 +14,7 @@ export default function Button({
   tag = 'button',
   href,
   className,
+  onClick,
 }: Props) {
   const defaultClassName: string[] = [
     'inline-block',
@@ -37,7 +39,7 @@ export default function Button({
 
   if (tag === 'link' && href) {
     return (
-      <Link className={buttonClassName} href={href}>
+      <Link className={buttonClassName} href={href} onClick={onClick}>
         {children}
       </Link>
     )
@@ -45,5 +47,9 @@ export default function Button({
 
   const CustomTag = tag as keyof JSX.IntrinsicElements
 
-  return <CustomTag className={buttonClassName}>{children}</CustomTag>
+  return (
+    <CustomTag className={buttonClassName} onClick={onClick}>
+      {children}
+    </CustomTag>
+  )
 }

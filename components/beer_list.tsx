@@ -1,0 +1,81 @@
+import { MouseEventHandler } from 'react'
+import Image from 'next/image'
+import defaultImage from '@/public/default.png'
+import Button from '@/components/button'
+
+type Props = {
+  beers: Beer[]
+  className?: string
+  onResetSearch?: MouseEventHandler
+}
+
+export default function BeerList({ beers, className, onResetSearch }: Props) {
+  const evaluateAlcoholVolume = (abv: number | null): string => {
+    if (!abv) {
+      return ''
+    }
+
+    const GREEN = 5
+    const YELLOW = 7
+    const RED = 10
+
+    if (abv <= GREEN) {
+      return 'text-green-500'
+    }
+
+    if (abv <= YELLOW) {
+      return 'text-yellow-500'
+    }
+
+    if (abv <= RED) {
+      return 'text-red-500'
+    }
+
+    return 'text-red-800'
+  }
+
+  if (beers.length === 0) {
+    const noBeerFoundClassName = ['text-center']
+
+    return (
+      <section className={[...noBeerFoundClassName, className].join(' ')}>
+        <h3 className="text-xl mb-2">Siamo spiacenti 😢</h3>
+        <h4 className="text-lg mb-3 underline underline-offset-4">
+          Non abbiamo trovato alcuna birra per la tua ricerca
+        </h4>
+
+        {onResetSearch && (
+          <Button onClick={onResetSearch}>Ricomincia la ricerca</Button>
+        )}
+      </section>
+    )
+  }
+
+  const beersSectionClassName = ['grid', 'grid-cols-5', 'gap-4']
+
+  return (
+    <section className={[...beersSectionClassName, className].join(' ')}>
+      {beers.map(({ id, name, tagline, image_url, abv }) => (
+        <div
+          key={id}
+          className="p-4 rounded-md bg-slate-200 shadow-lg shadow-slate-800"
+        >
+          <Image
+            src={image_url || defaultImage}
+            alt={name}
+            width={150}
+            height={150}
+            className="object-contain w-32 h-32 mb-3 mx-auto"
+          />
+          <h3 className="border-t border-slate-300 text-xl">{name}</h3>
+          <strong
+            className={`block mt-2 text-3xl ${evaluateAlcoholVolume(abv)}`}
+          >
+            {abv?.toFixed(1)}°
+          </strong>
+          <p className="mt-2 text-sm">{tagline}</p>
+        </div>
+      ))}
+    </section>
+  )
+}
