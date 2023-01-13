@@ -30,7 +30,7 @@ const fetchBeers = function <T>(params?: SearchStateQuery): Promise<T> {
     const cleanObject: SearchStateQuery = Object.entries(params).reduce(
       (cleanObject, [key, val]) => {
         if (val) {
-          cleanObject[key as keyof SearchStateQuery] = val
+          cleanObject[key as keyof SearchStateQuery] = val.replaceAll(' ', '_')
         }
 
         return cleanObject
@@ -75,7 +75,7 @@ export default function All({ initialBeers }: Props) {
     setSearch(newSearch)
 
     const objectParams: SearchStateQuery = {
-      beer_name: newSearch.beerName,
+      beer_name: (newSearch.beerName || '').replaceAll(' ', '_'),
     }
 
     router.replace({
