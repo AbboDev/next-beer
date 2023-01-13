@@ -19,11 +19,13 @@ type IngredientSearchState = {
 type SearchState = IngredientSearchState & {
   beerName?: string
   hop?: string
+  foodPairing?: string
 }
 
 type SearchStateQuery = IngredientSearchState & {
   beer_name?: string
   hops?: string
+  food?: string
 }
 
 type AutocompleteState = {
@@ -31,6 +33,7 @@ type AutocompleteState = {
   malts: string[]
   hops: string[]
   yeasts: string[]
+  foodPairings: string[]
 }
 
 /**
@@ -86,6 +89,7 @@ export default function All({ beers }: Props) {
     malts: [],
     hops: [],
     yeasts: [],
+    foodPairings: [],
   })
 
   useEffect(() => {
@@ -94,6 +98,7 @@ export default function All({ beers }: Props) {
       malts: jsonpath.query(beers, '$.*.ingredients.yeast') as string[],
       hops: jsonpath.query(beers, '$.*.ingredients.malt..name') as string[],
       yeasts: jsonpath.query(beers, '$.*.ingredients.hops..name') as string[],
+      foodPairings: jsonpath.query(beers, '$.*..food_pairing.*') as string[],
     }
 
     if (
@@ -119,6 +124,10 @@ export default function All({ beers }: Props) {
             ...previousAutocomplete.yeasts,
             ...newAutocomplete.yeasts,
           ].filter(onlyUnique),
+          foodPairings: [
+            ...previousAutocomplete.foodPairings,
+            ...newAutocomplete.foodPairings,
+          ].filter(onlyUnique),
         }
       })
     }
@@ -129,16 +138,24 @@ export default function All({ beers }: Props) {
     malt: (query.malt || '').replaceAll('_', ' '),
     hop: (query.hops || '').replaceAll('_', ' '),
     yeast: (query.yeast || '').replaceAll('_', ' '),
+    foodPairing: (query.food || '').replaceAll('_', ' '),
   })
 
   const updateQuery = (search: SearchState) => {
-    const { beerName: beer_name, hop: hops, malt, yeast } = search
+    const {
+      beerName: beer_name,
+      hop: hops,
+      malt,
+      yeast,
+      foodPairing: food,
+    } = search
 
     const objectParams: SearchStateQuery = {
       beer_name,
       hops,
       malt,
       yeast,
+      food,
     }
 
     router.replace({
@@ -152,6 +169,7 @@ export default function All({ beers }: Props) {
       malt: '',
       hop: '',
       yeast: '',
+      foodPairing: '',
     }
 
     setSearch(newSearch)
@@ -181,12 +199,12 @@ export default function All({ beers }: Props) {
       <H1>Tutte le birre</H1>
 
       <form action="#" method="GET" className="w-full mb-4 text-left">
-        <fieldset className="grid grid-cols-3 gap-x-4 gap-y-2">
+        <fieldset className="grid grid-cols-5 gap-x-4 gap-y-2">
           <legend className="text-xl text-white block mb-2">
             Ricerca birra per&hellip;
           </legend>
 
-          <div className="col-span-3">
+          <div className="col-span-2">
             <label htmlFor="beerName" className="block mb-1">
               Nome della birra
             </label>
@@ -218,7 +236,6 @@ export default function All({ beers }: Props) {
               name="malt"
               value={search.malt}
               onChange={handleChange}
-              placeholder="Prova a digitare Punk IPA, Brewdog, Beer&hellip;"
               className="rounded bg-white py-2 px-4 w-full"
               list="malts"
             />
@@ -241,7 +258,6 @@ export default function All({ beers }: Props) {
               name="hop"
               value={search.hop}
               onChange={handleChange}
-              placeholder="Prova a digitare Punk IPA, Brewdog, Beer&hellip;"
               className="rounded bg-white py-2 px-4 w-full"
               list="hops"
             />
@@ -263,7 +279,6 @@ export default function All({ beers }: Props) {
               name="yeast"
               value={search.yeast}
               onChange={handleChange}
-              placeholder="Prova a digitare Punk IPA, Brewdog, Beer&hellip;"
               className="rounded bg-white py-2 px-4 w-full"
               list="yeasts"
             />
@@ -271,6 +286,29 @@ export default function All({ beers }: Props) {
             <datalist id="yeasts">
               {autocomplete.yeasts?.length &&
                 autocomplete.yeasts.map((name) => (
+                  <option value={name} key={name} />
+                ))}
+            </datalist>
+          </div>
+
+          <div className="col-span-5">
+            <label htmlFor="beerName" className="block mb-1">
+              Hai qualche piatto a cui vorresti abbinare una buona birra? Prova
+              a cercare l&apos;abbinamento giusto!
+            </label>
+            <input
+              type="search"
+              name="foodPairing"
+              value={search.foodPairing}
+              onChange={handleChange}
+              placeholder="Ad esempio: chicken, curry, beef, ice cream&hellip;"
+              className="rounded bg-white py-2 px-4 w-full"
+              list="foodPairings"
+            />
+
+            <datalist id="foodPairings">
+              {autocomplete.foodPairings?.length &&
+                autocomplete.foodPairings.map((name) => (
                   <option value={name} key={name} />
                 ))}
             </datalist>
