@@ -37,6 +37,17 @@ export default function Button({
     'hover:dark:bg-teal-700',
   ]
 
+  if (disabled) {
+    defaultClassName.push(
+      'disabled:cursor-not-allowed',
+      'disabled:opacity-50',
+      'disabled:translate-x-0',
+      'disabled:translate-y-0',
+      'disabled:bg-white',
+      'disabled:dark:bg-slate-700'
+    )
+  }
+
   const buttonClassName: string = [...defaultClassName, className].join(' ')
 
   if (tag === 'link' && href) {
