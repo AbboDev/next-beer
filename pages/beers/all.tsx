@@ -1,11 +1,14 @@
-import { useState, ChangeEvent, useEffect } from 'react'
+import { useState, ChangeEvent, useEffect, MouseEvent } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import Layout from '@/components/layout'
 import H1 from '@/components/h1'
 import BeerList from '@/components/beer_list'
 import jsonpath from 'jsonpath'
+import Button from '@/components/button'
 // TODO: implement wretch library and/or integrated SWR for loading
+
+const PAGINATION_OPTIONS = [10, 25, 50, 80]
 
 type Props = {
   beers: Beer[]
@@ -16,17 +19,26 @@ type IngredientSearchState = {
   yeast?: string
 }
 
-type SearchState = IngredientSearchState & {
-  beerName?: string
-  hop?: string
-  foodPairing?: string
+type PaginationSearchState = {
+  page?: number | string
+  per_page?: number | string
 }
 
-type SearchStateQuery = IngredientSearchState & {
-  beer_name?: string
-  hops?: string
-  food?: string
-}
+type SearchState = PaginationSearchState &
+  IngredientSearchState & {
+    beerName?: string
+    hop?: string
+    foodPairing?: string
+  }
+
+type SearchStateQuery = PaginationSearchState &
+  IngredientSearchState & {
+    beer_name?: string
+    hops?: string
+    food?: string
+    page?: string
+    per_page?: string
+  }
 
 type AutocompleteState = {
   beerNames: string[]
@@ -45,9 +57,10 @@ type AutocompleteState = {
 const cleanQueryParams = function (params: SearchStateQuery): SearchStateQuery {
   return Object.entries(params).reduce((cleanObject, [key, value]) => {
     if (value) {
-      cleanObject[key as keyof SearchStateQuery] = (value as string)
+      cleanObject[key as keyof SearchStateQuery] = value
+        .toString()
         .trim()
-        .replaceAll(' ', '_')
+        .replaceAll(' ', '_') as string
     }
 
     return cleanObject
@@ -84,6 +97,7 @@ export default function All({ beers }: Props) {
 
   const query: SearchStateQuery = router.query
 
+  // TODO: create single component for input with autocomplete
   const [autocomplete, setAutocomplete] = useState<AutocompleteState>({
     beerNames: [],
     malts: [],
@@ -133,12 +147,15 @@ export default function All({ beers }: Props) {
     }
   }, [beers])
 
+  // TODO: move search bar into separate component
   const [search, setSearch] = useState<SearchState>({
     beerName: (query.beer_name || '').replaceAll('_', ' '),
     malt: (query.malt || '').replaceAll('_', ' '),
     hop: (query.hops || '').replaceAll('_', ' '),
     yeast: (query.yeast || '').replaceAll('_', ' '),
     foodPairing: (query.food || '').replaceAll('_', ' '),
+    page: parseInt(query.page || '1'),
+    per_page: parseInt(query.per_page || '') || PAGINATION_OPTIONS[0],
   })
 
   const updateQuery = (search: SearchState) => {
@@ -148,6 +165,8 @@ export default function All({ beers }: Props) {
       malt,
       yeast,
       foodPairing: food,
+      per_page,
+      page,
     } = search
 
     const objectParams: SearchStateQuery = {
@@ -156,6 +175,8 @@ export default function All({ beers }: Props) {
       malt,
       yeast,
       food,
+      per_page: (per_page || PAGINATION_OPTIONS[0]).toString(),
+      page: (page || PAGINATION_OPTIONS[0]).toString(),
     }
 
     router.replace({
@@ -170,13 +191,17 @@ export default function All({ beers }: Props) {
       hop: '',
       yeast: '',
       foodPairing: '',
+      per_page: PAGINATION_OPTIONS[0],
+      page: 1,
     }
 
     setSearch(newSearch)
     updateQuery(newSearch)
   }
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     clearTimeout(filterTimeout)
 
     const { target } = event
@@ -185,6 +210,37 @@ export default function All({ beers }: Props) {
     const newSearch: SearchState = {
       ...search,
       [name]: value,
+    }
+
+    setSearch(newSearch)
+
+    filterTimeout = setTimeout(() => {
+      updateQuery(newSearch)
+    }, 500)
+  }
+
+  const handlePageChange = (event: MouseEvent, newPage: number): void => {
+    event.preventDefault()
+
+    changePage(newPage)
+  }
+
+  const changePage = (newPage: number, add = true): void => {
+    clearTimeout(filterTimeout)
+
+    let page = newPage
+
+    if (add) {
+      page = (search.page as number) + newPage
+    }
+
+    if (page <= 0) {
+      page = 1
+    }
+
+    const newSearch: SearchState = {
+      ...search,
+      page,
     }
 
     setSearch(newSearch)
@@ -312,6 +368,49 @@ export default function All({ beers }: Props) {
                   <option value={name} key={name} />
                 ))}
             </datalist>
+          </div>
+
+          <div>
+            <label htmlFor="per_page" className="block mb-1">
+              Visualizza {search.per_page} birre per pagina:
+            </label>
+            <select
+              id="per_page"
+              name="per_page"
+              onChange={handleChange}
+              className="rounded bg-white py-2 px-4 w-full"
+              value={search.per_page}
+            >
+              {PAGINATION_OPTIONS.map((value) => (
+                <option value={value} key={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col-span-4 grid grid-cols-[1fr_auto_1fr] items-center justify-center self-end">
+            <Button
+              onClick={(event) => handlePageChange(event, -1)}
+              tag="button"
+              className="w-9 block justify-self-end text-xl py-1"
+              disabled={search.page === '1'}
+            >
+              &laquo;
+            </Button>
+            <div className="mx-4">Stai vedendo pagina {search.page || 1}</div>
+            <Button
+              onClick={(event) => handlePageChange(event, 1)}
+              tag="button"
+              className="w-9 block justify-self-start text-xl py-1"
+              disabled={
+                beers.length <
+                (search.per_page ||
+                  PAGINATION_OPTIONS[PAGINATION_OPTIONS.length - 1])
+              }
+            >
+              &raquo;
+            </Button>
           </div>
         </fieldset>
       </form>

@@ -7,6 +7,7 @@ type Props = {
   href?: string
   className?: string
   onClick?: MouseEventHandler
+  disabled?: boolean
 }
 
 export default function Button({
@@ -15,6 +16,7 @@ export default function Button({
   href,
   className,
   onClick,
+  disabled = false,
 }: Props) {
   const defaultClassName: string[] = [
     'inline-block',
@@ -35,11 +37,27 @@ export default function Button({
     'hover:dark:bg-teal-700',
   ]
 
+  if (disabled) {
+    defaultClassName.push(
+      'disabled:cursor-not-allowed',
+      'disabled:opacity-50',
+      'disabled:translate-x-0',
+      'disabled:translate-y-0',
+      'disabled:bg-white',
+      'disabled:dark:bg-slate-700'
+    )
+  }
+
   const buttonClassName: string = [...defaultClassName, className].join(' ')
 
   if (tag === 'link' && href) {
     return (
-      <Link className={buttonClassName} href={href} onClick={onClick}>
+      <Link
+        className={buttonClassName}
+        href={href}
+        onClick={onClick}
+        // disabled={disabled}
+      >
         {children}
       </Link>
     )
@@ -48,7 +66,11 @@ export default function Button({
   const CustomTag = tag as keyof JSX.IntrinsicElements
 
   return (
-    <CustomTag className={buttonClassName} onClick={onClick}>
+    <CustomTag
+      className={buttonClassName}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {children}
     </CustomTag>
   )
