@@ -1,10 +1,9 @@
-import Image from 'next/image'
-import Layout from '@/components/layout'
-import { GetServerSideProps } from 'next'
-import H1 from '@/components/h1'
 import { useState, ChangeEvent } from 'react'
-import defaultImage from '@/public/default.png'
+import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
+import Layout from '@/components/layout'
+import H1 from '@/components/h1'
+import BeerList from '@/components/beer_list'
 // TODO: implement wretch library and/or integrated SWR for loading
 
 type Props = {
@@ -73,57 +72,49 @@ export default function All({ beers }: Props) {
     yeast: (query.yeast || '').replaceAll('_', ' '),
   })
 
+  const updateQuery = (search: SearchState) => {
+    const { beerName: beer_name, hops, malt, yeast } = search
+
+    const objectParams: SearchStateQuery = {
+      beer_name,
+      hops,
+      malt,
+      yeast,
+    }
+
+    router.replace({
+      query: { ...router.query, ...objectParams },
+    })
+  }
+
+  const handleResetSearch = () => {
+    const newSearch: SearchState = {
+      beerName: '',
+      malt: '',
+      hops: '',
+      yeast: '',
+    }
+
+    setSearch(newSearch)
+    updateQuery(newSearch)
+  }
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     clearTimeout(filterTimeout)
 
     const { target } = event
     const { name, value } = target
 
-    const newSearch = {
+    const newSearch: SearchState = {
       ...search,
       [name]: value,
     }
 
     setSearch(newSearch)
 
-    filterTimeout = setTimeout(async () => {
-      const { beerName: beer_name, hops, malt, yeast } = newSearch
-
-      const objectParams: SearchStateQuery = {
-        beer_name,
-        hops,
-        malt,
-        yeast,
-      }
-
-      router.replace({
-        query: { ...router.query, ...objectParams },
-      })
+    filterTimeout = setTimeout(() => {
+      updateQuery(newSearch)
     }, 500)
-  }
-
-  const evaluateAlcoholVolume = (abv: number | null): string => {
-    if (!abv) {
-      return ''
-    }
-
-    const GREEN = 5
-    const YELLOW = 7
-    const RED = 10
-
-    if (abv <= GREEN) {
-      return 'text-green-500'
-    }
-
-    if (abv <= YELLOW) {
-      return 'text-yellow-500'
-    }
-
-    if (abv <= RED) {
-      return 'text-red-500'
-    }
-
-    return 'text-red-800'
   }
 
   return (
@@ -215,29 +206,7 @@ export default function All({ beers }: Props) {
         </fieldset>
       </form>
 
-      <section className="grid grid-cols-5 gap-4">
-        {beers.map(({ id, name, tagline, image_url, abv }) => (
-          <div
-            key={id}
-            className="p-4 rounded-md bg-slate-200 shadow-lg shadow-slate-800"
-          >
-            <Image
-              src={image_url || defaultImage}
-              alt={name}
-              width={150}
-              height={150}
-              className="object-contain w-32 h-32 mb-3 mx-auto"
-            />
-            <h3 className="border-t border-slate-300 text-xl">{name}</h3>
-            <strong
-              className={`block mt-2 text-3xl ${evaluateAlcoholVolume(abv)}`}
-            >
-              {abv?.toFixed(1)}°
-            </strong>
-            <p className="mt-2 text-sm">{tagline}</p>
-          </div>
-        ))}
-      </section>
+      <BeerList beers={beers} onResetSearch={handleResetSearch} />
     </Layout>
   )
 }
