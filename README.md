@@ -42,8 +42,8 @@ Utilizzare NextJS per creare un'applicazione React ed effettuare chiamate API a 
   - **renderla visivamente accattivante.** (Work in progress)
 - **Consentire all'utente di filtrare l'elenco di birre per**:
   - ~~**nome**~~
-  - **ingredienti**
-  - **abbinamenti suggeriti**
+  - ~~**ingredienti**~~
+  - ~~**abbinamenti suggeriti**~~
 - **Implementare la paginazione per visualizzare solo un determinato numero di birre per volta (ad esempio, 10 birre per pagina).**
 - **Quando un utente clicca su una birra, visualizzare una finestra modale con informazioni dettagliate su quella birra (ad esempio, nome, ingredienti, metodo di produzione etc.).**
 
