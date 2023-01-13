@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 // TODO: implement wretch library and/or integrated SWR for loading
 
 type Props = {
-  initialBeers: Beer[]
+  beers: Beer[]
 }
 
 type IngredientSearchState = {
@@ -61,10 +61,8 @@ const fetchBeers = function <T>(params?: SearchStateQuery): Promise<T> {
 
 let filterTimeout: ReturnType<typeof setTimeout>
 
-export default function All({ initialBeers }: Props) {
+export default function All({ beers }: Props) {
   const router = useRouter()
-
-  const [beers, setBeers] = useState(initialBeers)
 
   const query: SearchStateQuery = router.query
 
@@ -75,7 +73,7 @@ export default function All({ initialBeers }: Props) {
     yeast: (query.yeast || '').replaceAll('_', ' '),
   })
 
-  const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     clearTimeout(filterTimeout)
 
     const { target } = event
@@ -101,10 +99,6 @@ export default function All({ initialBeers }: Props) {
       router.replace({
         query: { ...router.query, ...objectParams },
       })
-
-      const beers: Beer[] = await fetchBeers(objectParams)
-
-      setBeers(beers)
     }, 500)
   }
 
@@ -255,7 +249,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 
   return {
     props: {
-      initialBeers: beers,
+      beers: beers,
     },
   }
 }
