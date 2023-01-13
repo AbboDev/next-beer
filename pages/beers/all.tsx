@@ -59,6 +59,8 @@ const fetchBeers = function <T>(params?: SearchStateQuery): Promise<T> {
   })
 }
 
+let filterTimeout: ReturnType<typeof setTimeout>
+
 export default function All({ initialBeers }: Props) {
   const router = useRouter()
 
@@ -74,6 +76,8 @@ export default function All({ initialBeers }: Props) {
   })
 
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    clearTimeout(filterTimeout)
+
     const { target } = event
     const { name, value } = target
 
@@ -84,22 +88,24 @@ export default function All({ initialBeers }: Props) {
 
     setSearch(newSearch)
 
-    const { beerName: beer_name, hops, malt, yeast } = newSearch
+    filterTimeout = setTimeout(async () => {
+      const { beerName: beer_name, hops, malt, yeast } = newSearch
 
-    const objectParams: SearchStateQuery = cleanQueryParams({
-      beer_name,
-      hops,
-      malt,
-      yeast,
-    })
+      const objectParams: SearchStateQuery = {
+        beer_name,
+        hops,
+        malt,
+        yeast,
+      }
 
-    router.replace({
-      query: { ...router.query, ...objectParams },
-    })
+      router.replace({
+        query: { ...router.query, ...objectParams },
+      })
 
-    const beers: Beer[] = await fetchBeers(objectParams)
+      const beers: Beer[] = await fetchBeers(objectParams)
 
-    setBeers(beers)
+      setBeers(beers)
+    }, 500)
   }
 
   const evaluateAlcoholVolume = (abv: number | null): string => {
