@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import Layout from '@/components/layout'
 import H1 from '@/components/h1'
 import BeerList from '@/components/beer_list'
+import jsonpath from 'jsonpath'
 // TODO: implement wretch library and/or integrated SWR for loading
 
 type Props = {
@@ -26,10 +27,10 @@ type SearchStateQuery = IngredientSearchState & {
 }
 
 type AutocompleteState = {
-  beerNames?: string[]
-  malts?: string[]
-  hops?: string[]
-  yeasts?: string[]
+  beerNames: string[]
+  malts: string[]
+  hops: string[]
+  yeasts: string[]
 }
 
 /**
@@ -69,6 +70,10 @@ const fetchBeers = function <T>(params?: SearchStateQuery): Promise<T> {
   })
 }
 
+function onlyUnique<T>(value: T, index: number, self: T[]): boolean {
+  return self.indexOf(value) === index
+}
+
 let filterTimeout: ReturnType<typeof setTimeout>
 
 export default function All({ beers }: Props) {
@@ -78,34 +83,42 @@ export default function All({ beers }: Props) {
 
   const [autocomplete, setAutocomplete] = useState<AutocompleteState>({
     beerNames: [],
-    //   malts: [],
-    //   hops: [],
-    //   yeasts: [],
+    malts: [],
+    hops: [],
+    yeasts: [],
   })
 
-  const getSearchProps = function <T>(data: T[], prop: keyof T): T[keyof T][] {
-    return Object.entries(data).reduce((results, [, item]) => {
-      if (!Object.hasOwnProperty.call(item, prop)) {
-        return results
-      }
-
-      const value = item[prop]
-      if (value) {
-        results.push(value)
-      }
-
-      return results
-    }, [] as T[keyof T][])
-  }
-
   useEffect(() => {
-    const beerNames = getSearchProps<Beer>(beers, 'name')
+    const newAutocomplete: AutocompleteState = {
+      beerNames: jsonpath.query(beers, '$.*.name') as string[],
+      malts: jsonpath.query(beers, '$.*.ingredients.yeast') as string[],
+      hops: jsonpath.query(beers, '$.*.ingredients.malt..name') as string[],
+      yeasts: jsonpath.query(beers, '$.*.ingredients.hops..name') as string[],
+    }
 
-    if (beerNames.length > 0) {
+    if (
+      (newAutocomplete.beerNames && newAutocomplete.beerNames.length > 0) ||
+      (newAutocomplete.malts && newAutocomplete.malts.length > 0) ||
+      (newAutocomplete.hops && newAutocomplete.hops.length > 0) ||
+      (newAutocomplete.yeasts && newAutocomplete.yeasts.length > 0)
+    ) {
       setAutocomplete((previousAutocomplete) => {
         return {
-          ...previousAutocomplete,
-          beerNames,
+          beerNames: [
+            ...previousAutocomplete.beerNames,
+            ...newAutocomplete.beerNames,
+          ].filter(onlyUnique),
+          malts: [
+            ...previousAutocomplete.malts,
+            ...newAutocomplete.malts,
+          ].filter(onlyUnique),
+          hops: [...previousAutocomplete.hops, ...newAutocomplete.hops].filter(
+            onlyUnique
+          ),
+          yeasts: [
+            ...previousAutocomplete.yeasts,
+            ...newAutocomplete.yeasts,
+          ].filter(onlyUnique),
         }
       })
     }
@@ -211,7 +224,10 @@ export default function All({ beers }: Props) {
             />
 
             <datalist id="malts">
-              <option value="" />
+              {autocomplete.malts?.length &&
+                autocomplete.malts.map((name) => (
+                  <option value={name} key={name} />
+                ))}
             </datalist>
           </div>
 
@@ -231,7 +247,10 @@ export default function All({ beers }: Props) {
             />
 
             <datalist id="hops">
-              <option value="" />
+              {autocomplete.hops?.length &&
+                autocomplete.hops.map((name) => (
+                  <option value={name} key={name} />
+                ))}
             </datalist>
           </div>
 
@@ -250,7 +269,10 @@ export default function All({ beers }: Props) {
             />
 
             <datalist id="yeasts">
-              <option value="" />
+              {autocomplete.yeasts?.length &&
+                autocomplete.yeasts.map((name) => (
+                  <option value={name} key={name} />
+                ))}
             </datalist>
           </div>
         </fieldset>
