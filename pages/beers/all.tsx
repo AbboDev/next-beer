@@ -11,34 +11,41 @@ type Props = {
   initialBeers: Beer[]
 }
 
-type SearchState = {
+type IngredientSearchState = {
+  malt?: string
+  hops?: string
+  yeast?: string
+}
+
+type SearchState = IngredientSearchState & {
   beerName?: string
 }
 
-type SearchStateQuery = {
+type SearchStateQuery = IngredientSearchState & {
   beer_name?: string
+}
+
+/**
+ * The SearchStateQuery is parsed before toString() because Punk API
+ * gives errors when params are passed empty
+ */
+const cleanQueryParams = function (params: SearchStateQuery): SearchStateQuery {
+  return Object.entries(params).reduce((cleanObject, [key, value]) => {
+    if (value) {
+      cleanObject[key as keyof SearchStateQuery] = (value as string)
+        .trim()
+        .replaceAll(' ', '_')
+    }
+
+    return cleanObject
+  }, {} as SearchStateQuery)
 }
 
 const fetchBeers = function <T>(params?: SearchStateQuery): Promise<T> {
   let query = ''
 
   if (params) {
-    /**
-     * The SearchStateQuery is parsed before toString() because Punk API
-     * gives errors when params are passed empty
-     */
-    const cleanObject: SearchStateQuery = Object.entries(params).reduce(
-      (cleanObject, [key, val]) => {
-        if (val) {
-          cleanObject[key as keyof SearchStateQuery] = val.replaceAll(' ', '_')
-        }
-
-        return cleanObject
-      },
-      {} as SearchStateQuery
-    )
-
-    query = new URLSearchParams(cleanObject)?.toString()
+    query = new URLSearchParams(cleanQueryParams(params))?.toString()
   }
 
   const url: URL = new URL(`https://api.punkapi.com/v2/beers?${query}`)
@@ -60,7 +67,10 @@ export default function All({ initialBeers }: Props) {
   const query: SearchStateQuery = router.query
 
   const [search, setSearch] = useState<SearchState>({
-    beerName: query.beer_name || '',
+    beerName: (query.beer_name || '').replaceAll('_', ' '),
+    malt: (query.malt || '').replaceAll('_', ' '),
+    hops: (query.hops || '').replaceAll('_', ' '),
+    yeast: (query.yeast || '').replaceAll('_', ' '),
   })
 
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -74,9 +84,14 @@ export default function All({ initialBeers }: Props) {
 
     setSearch(newSearch)
 
-    const objectParams: SearchStateQuery = {
-      beer_name: (newSearch.beerName || '').replaceAll(' ', '_'),
-    }
+    const { beerName: beer_name, hops, malt, yeast } = newSearch
+
+    const objectParams: SearchStateQuery = cleanQueryParams({
+      beer_name,
+      hops,
+      malt,
+      yeast,
+    })
 
     router.replace({
       query: { ...router.query, ...objectParams },
@@ -116,14 +131,14 @@ export default function All({ initialBeers }: Props) {
       <H1>Tutte le birre</H1>
 
       <form action="#" method="GET" className="w-full mb-4 text-left">
-        <fieldset className="grid grid-cols-3">
+        <fieldset className="grid grid-cols-3 gap-x-4 gap-y-2">
           <legend className="text-xl text-white block mb-2">
             Ricerca birra per&hellip;
           </legend>
 
           <div className="col-span-3">
             <label htmlFor="beerName" className="block mb-1">
-              Nome
+              Nome della birra
             </label>
             <input
               type="search"
@@ -134,11 +149,73 @@ export default function All({ initialBeers }: Props) {
               placeholder="Prova a digitare Punk IPA, Brewdog, Beer&hellip;"
               className="rounded bg-white py-2 px-4 w-full"
             />
+
+            <datalist id="beerName">
+              <option value="" />
+            </datalist>
+          </div>
+
+          <div>
+            <label htmlFor="malt" className="block mb-1">
+              Malto usato
+            </label>
+            <input
+              type="search"
+              id="malt"
+              name="malt"
+              value={search.malt}
+              onChange={handleChange}
+              placeholder="Prova a digitare Punk IPA, Brewdog, Beer&hellip;"
+              className="rounded bg-white py-2 px-4 w-full"
+              list="malt"
+            />
+
+            <datalist id="malt">
+              <option value="" />
+            </datalist>
+          </div>
+
+          <div>
+            <label htmlFor="hops" className="block mb-1">
+              Luppoli utilizzati
+            </label>
+            <input
+              type="search"
+              id="hops"
+              name="hops"
+              value={search.hops}
+              onChange={handleChange}
+              placeholder="Prova a digitare Punk IPA, Brewdog, Beer&hellip;"
+              className="rounded bg-white py-2 px-4 w-full"
+            />
+
+            <datalist id="hops">
+              <option value="" />
+            </datalist>
+          </div>
+
+          <div>
+            <label htmlFor="yeast" className="block mb-1">
+              Tipologia di lievito
+            </label>
+            <input
+              type="search"
+              id="yeast"
+              name="yeast"
+              value={search.yeast}
+              onChange={handleChange}
+              placeholder="Prova a digitare Punk IPA, Brewdog, Beer&hellip;"
+              className="rounded bg-white py-2 px-4 w-full"
+            />
+
+            <datalist id="yeast">
+              <option value="" />
+            </datalist>
           </div>
         </fieldset>
       </form>
 
-      <section className="grid grid-cols-5 gap-x-4 gap-y-4">
+      <section className="grid grid-cols-5 gap-4">
         {beers.map(({ id, name, tagline, image_url, abv }) => (
           <div
             key={id}
