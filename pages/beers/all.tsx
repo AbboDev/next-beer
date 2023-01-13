@@ -7,6 +7,8 @@ import BeerList from '@/components/beer_list'
 import jsonpath from 'jsonpath'
 // TODO: implement wretch library and/or integrated SWR for loading
 
+const PAGINATION_OPTIONS = ['10', '25', '50', '100']
+
 type Props = {
   beers: Beer[]
 }
@@ -16,17 +18,24 @@ type IngredientSearchState = {
   yeast?: string
 }
 
-type SearchState = IngredientSearchState & {
-  beerName?: string
-  hop?: string
-  foodPairing?: string
+type PaginationSearchState = {
+  page?: string
+  per_page?: string
 }
 
-type SearchStateQuery = IngredientSearchState & {
-  beer_name?: string
-  hops?: string
-  food?: string
-}
+type SearchState = PaginationSearchState &
+  IngredientSearchState & {
+    beerName?: string
+    hop?: string
+    foodPairing?: string
+  }
+
+type SearchStateQuery = PaginationSearchState &
+  IngredientSearchState & {
+    beer_name?: string
+    hops?: string
+    food?: string
+  }
 
 type AutocompleteState = {
   beerNames: string[]
@@ -45,7 +54,7 @@ type AutocompleteState = {
 const cleanQueryParams = function (params: SearchStateQuery): SearchStateQuery {
   return Object.entries(params).reduce((cleanObject, [key, value]) => {
     if (value) {
-      cleanObject[key as keyof SearchStateQuery] = (value as string)
+      cleanObject[key as keyof SearchStateQuery] = value
         .trim()
         .replaceAll(' ', '_')
     }
@@ -84,6 +93,7 @@ export default function All({ beers }: Props) {
 
   const query: SearchStateQuery = router.query
 
+  // TODO: create single component for input with autocomplete
   const [autocomplete, setAutocomplete] = useState<AutocompleteState>({
     beerNames: [],
     malts: [],
@@ -133,12 +143,15 @@ export default function All({ beers }: Props) {
     }
   }, [beers])
 
+  // TODO: move search bar into separate component
   const [search, setSearch] = useState<SearchState>({
     beerName: (query.beer_name || '').replaceAll('_', ' '),
     malt: (query.malt || '').replaceAll('_', ' '),
     hop: (query.hops || '').replaceAll('_', ' '),
     yeast: (query.yeast || '').replaceAll('_', ' '),
     foodPairing: (query.food || '').replaceAll('_', ' '),
+    page: query.page || '',
+    per_page: query.per_page || PAGINATION_OPTIONS[0],
   })
 
   const updateQuery = (search: SearchState) => {
@@ -148,6 +161,7 @@ export default function All({ beers }: Props) {
       malt,
       yeast,
       foodPairing: food,
+      per_page,
     } = search
 
     const objectParams: SearchStateQuery = {
@@ -156,6 +170,7 @@ export default function All({ beers }: Props) {
       malt,
       yeast,
       food,
+      per_page,
     }
 
     router.replace({
@@ -176,7 +191,9 @@ export default function All({ beers }: Props) {
     updateQuery(newSearch)
   }
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     clearTimeout(filterTimeout)
 
     const { target } = event
@@ -312,6 +329,26 @@ export default function All({ beers }: Props) {
                   <option value={name} key={name} />
                 ))}
             </datalist>
+          </div>
+
+          <div>
+            <label htmlFor="per_page" className="block mb-1">
+              Visualizza {search.per_page} birre per pagina:
+            </label>
+            <select
+              id="per_page"
+              name="per_page"
+              value={search.per_page}
+              onChange={handleChange}
+              className="rounded bg-white py-2 px-4 w-full"
+              defaultValue={search.per_page}
+            >
+              {PAGINATION_OPTIONS.map((value) => (
+                <option value={value} key={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
           </div>
         </fieldset>
       </form>
