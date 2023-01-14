@@ -6,6 +6,7 @@ import H1 from '@/components/h1'
 import BeerList from '@/components/beer_list'
 import jsonpath from 'jsonpath'
 import Button from '@/components/button'
+import SearchField from '@/components/search_field'
 // TODO: implement wretch library and/or integrated SWR for loading
 
 const PAGINATION_OPTIONS = [10, 25, 50, 80]
@@ -260,115 +261,49 @@ export default function All({ beers }: Props) {
             Ricerca birra per&hellip;
           </legend>
 
-          <div className="col-span-2">
-            <label htmlFor="beerName" className="block mb-1">
-              Nome della birra
-            </label>
-            <input
-              type="search"
-              name="beerName"
-              value={search.beerName}
-              onChange={handleChange}
-              placeholder="Prova a digitare Punk IPA, Brewdog, Beer&hellip;"
-              className="rounded bg-white py-2 px-4 w-full"
-              list="beerNames"
-            />
+          <SearchField
+            className="col-span-2"
+            id="beerName"
+            label="Nome della birra"
+            value={search.beerName}
+            onChange={handleChange}
+            placeholder="Prova a digitare Punk IPA, Brewdog, Beer&hellip;"
+            autocomplete={autocomplete.beerNames}
+          />
 
-            <datalist id="beerNames">
-              {autocomplete.beerNames?.length &&
-                autocomplete.beerNames.map((name) => (
-                  <option value={name} key={name} />
-                ))}
-            </datalist>
-          </div>
+          <SearchField
+            id="malt"
+            label="Malto usato"
+            value={search.malt}
+            onChange={handleChange}
+            autocomplete={autocomplete.malts}
+          />
 
-          <div>
-            <label htmlFor="malt" className="block mb-1">
-              Malto usato
-            </label>
-            <input
-              type="search"
-              id="malt"
-              name="malt"
-              value={search.malt}
-              onChange={handleChange}
-              className="rounded bg-white py-2 px-4 w-full"
-              list="malts"
-            />
+          <SearchField
+            id="hop"
+            label="Luppoli utilizzati"
+            value={search.hop}
+            onChange={handleChange}
+            autocomplete={autocomplete.hops}
+          />
 
-            <datalist id="malts">
-              {autocomplete.malts?.length &&
-                autocomplete.malts.map((name) => (
-                  <option value={name} key={name} />
-                ))}
-            </datalist>
-          </div>
+          <SearchField
+            id="yeast"
+            label="Tipologia di lievito"
+            value={search.yeast}
+            onChange={handleChange}
+            autocomplete={autocomplete.yeasts}
+          />
 
-          <div>
-            <label htmlFor="hop" className="block mb-1">
-              Luppoli utilizzati
-            </label>
-            <input
-              type="search"
-              id="hop"
-              name="hop"
-              value={search.hop}
-              onChange={handleChange}
-              className="rounded bg-white py-2 px-4 w-full"
-              list="hops"
-            />
-
-            <datalist id="hops">
-              {autocomplete.hops?.length &&
-                autocomplete.hops.map((name) => (
-                  <option value={name} key={name} />
-                ))}
-            </datalist>
-          </div>
-
-          <div>
-            <label htmlFor="yeast" className="block mb-1">
-              Tipologia di lievito
-            </label>
-            <input
-              type="search"
-              name="yeast"
-              value={search.yeast}
-              onChange={handleChange}
-              className="rounded bg-white py-2 px-4 w-full"
-              list="yeasts"
-            />
-
-            <datalist id="yeasts">
-              {autocomplete.yeasts?.length &&
-                autocomplete.yeasts.map((name) => (
-                  <option value={name} key={name} />
-                ))}
-            </datalist>
-          </div>
-
-          <div className="col-span-5">
-            <label htmlFor="beerName" className="block mb-1">
-              Hai qualche piatto a cui vorresti abbinare una buona birra? Prova
-              a cercare l&apos;abbinamento giusto!
-            </label>
-            <input
-              type="search"
-              name="foodPairing"
-              value={search.foodPairing}
-              onChange={handleChange}
-              placeholder="Ad esempio: chicken, curry, beef, ice cream&hellip;"
-              className="rounded bg-white py-2 px-4 w-full"
-              list="foodPairings"
-            />
-
-            <datalist id="foodPairings">
-              {autocomplete.foodPairings?.length &&
-                autocomplete.foodPairings.map((name) => (
-                  <option value={name} key={name} />
-                ))}
-            </datalist>
-          </div>
+          <SearchField
+            className="col-span-5"
+            id="foodPairing"
+            label="Hai qualche piatto a cui vorresti abbinare una buona birra? Prova a cercare l'abbinamento giusto!"
+            value={search.foodPairing}
+            onChange={handleChange}
+            placeholder="Ad esempio: chicken, curry, beef, ice cream&hellip;"
+            autocomplete={autocomplete.foodPairings}
+          />
 
           <div>
             <label htmlFor="per_page" className="block mb-1">
@@ -394,7 +329,7 @@ export default function All({ beers }: Props) {
               onClick={(event) => handlePageChange(event, -1)}
               tag="button"
               className="w-9 block justify-self-end text-xl py-1"
-              disabled={search.page === '1'}
+              disabled={search.page === 1}
             >
               &laquo;
             </Button>
