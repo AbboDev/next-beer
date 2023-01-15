@@ -7,6 +7,7 @@ import BeerList from '@/components/beer_list'
 import jsonpath from 'jsonpath'
 import Button from '@/components/button'
 import SearchField from '@/components/search_field'
+import BeerModal from '@/components/beer_modal'
 // TODO: implement wretch library and/or integrated SWR for loading
 
 const PAGINATION_OPTIONS = [10, 25, 50, 80]
@@ -97,6 +98,8 @@ export default function All({ beers }: Props) {
   const router = useRouter()
 
   const query: SearchStateQuery = router.query
+
+  const [beer, setBeer] = useState<Beer | null>(null)
 
   // TODO: create single component for input with autocomplete
   const [autocomplete, setAutocomplete] = useState<AutocompleteState>({
@@ -218,6 +221,14 @@ export default function All({ beers }: Props) {
     filterTimeout = setTimeout(() => {
       updateQuery(newSearch)
     }, 500)
+  }
+
+  const handleBeerSelect = (beer: Beer): void => {
+    setBeer(beer)
+  }
+
+  const handleCloseModal = (): void => {
+    setBeer(null)
   }
 
   const handlePageChange = (event: MouseEvent, newPage: number): void => {
@@ -350,7 +361,13 @@ export default function All({ beers }: Props) {
         </fieldset>
       </form>
 
-      <BeerList beers={beers} onResetSearch={handleResetSearch} />
+      <BeerList
+        beers={beers}
+        onResetSearch={handleResetSearch}
+        onBeerSelect={handleBeerSelect}
+      />
+
+      {beer && <BeerModal onCloseModal={handleCloseModal} beer={beer} />}
     </Layout>
   )
 }

@@ -1,0 +1,35 @@
+@keyframes animate-fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes animate-fade-out {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.u-fade-in {
+  animation-name: animate-fade-in;
+  animation-duration: 450ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-direction: normal;
+}
+
+.u-fade-out {
+  animation-name: animate-fade-out;
+  animation-duration: 450ms;
+  animation-fill-mode: forwards;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-direction: normal;
+}
