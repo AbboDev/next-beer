@@ -1,3 +1,4 @@
+import { ParsedUrlQuery } from 'querystring'
 import { useState, ChangeEvent, useEffect, MouseEvent } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
@@ -8,6 +9,7 @@ import jsonpath from 'jsonpath'
 import Button from '@/components/button'
 import SearchField from '@/components/search_field'
 import BeerModal from '@/components/beer_modal'
+import { fetchBeers } from '@/utilities/api'
 import { onlyUnique } from '@/utilities/array'
 // TODO: implement wretch library and/or integrated SWR for loading
 
@@ -34,7 +36,8 @@ type SearchState = PaginationSearchState &
     foodPairing?: string
   }
 
-type SearchStateQuery = PaginationSearchState &
+type SearchStateQuery = ParsedUrlQuery &
+  PaginationSearchState &
   IngredientSearchState & {
     beer_name?: string
     hops?: string
@@ -49,44 +52,6 @@ type AutocompleteState = {
   hops: string[]
   yeasts: string[]
   foodPairings: string[]
-}
-
-/**
- * The SearchStateQuery is parsed before toString() because Punk API
- * gives errors when params are passed empty
- *
- * TODO: move into separate folder
- */
-const cleanQueryParams = function (params: SearchStateQuery): SearchStateQuery {
-  return Object.entries(params).reduce((cleanObject, [key, value]) => {
-    if (value) {
-      cleanObject[key as keyof SearchStateQuery] = value
-        .toString()
-        .trim()
-        .replaceAll(' ', '_') as string
-    }
-
-    return cleanObject
-  }, {} as SearchStateQuery)
-}
-
-// TODO: move into separate folder
-const fetchBeers = function <T>(params?: SearchStateQuery): Promise<T> {
-  let query = ''
-
-  if (params) {
-    query = new URLSearchParams(cleanQueryParams(params))?.toString()
-  }
-
-  const url: URL = new URL(`https://api.punkapi.com/v2/beers?${query}`)
-
-  return fetch(url).then((response) => {
-    if (!response.ok) {
-      throw new Error(response.statusText)
-    }
-
-    return response.json() as Promise<T>
-  })
 }
 
 let filterTimeout: ReturnType<typeof setTimeout>
