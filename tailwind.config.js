@@ -10,6 +10,16 @@ module.exports = {
         sans: ['var(--barlow-font)', 'sans-serif'],
         // serif: ['Merriweather', 'serif'],
       },
+      gridTemplateRows: {
+        'beer-modal': 'repeat(5, min-content)',
+      },
+      gridTemplateColumns: {
+        'beer-modal': '1fr 300px',
+      },
+      maxHeight: {
+        modal: 'calc(100% - 32px)',
+        'modal-image': 'min(calc(100vh - 100px - 64px), 100%)',
+      },
     },
   },
   plugins: [],

@@ -16,7 +16,9 @@ type Props = {
 export default function Modal({ children, onCloseModal }: Props) {
   const [modalClassName, setModalClassName] = useState([
     'fixed',
-    'inset-0 z-100',
+    'inset-0',
+    'z-100',
+    'top-[100px]',
     'pointer-events-auto',
     'opacity-0',
   ])
@@ -45,16 +47,16 @@ export default function Modal({ children, onCloseModal }: Props) {
 
   return (
     <div className={modalClassName.join(' ')}>
-      <div className="absolute inset-0 bg-slate-500 opacity-50"></div>
+      <div className="absolute inset-0 bg-slate-500 opacity-50 p-4"></div>
 
       <button
         onClick={handleCloseModal}
-        className="absolute top-[100px] right-0 text-7xl flex items-center justify-center leading-10 w-16 h-16 hover:text-white transition-colors"
+        className="absolute top-0 right-0 text-7xl flex items-center justify-center leading-10 w-16 h-16 hover:text-white transition-colors"
       >
         &times;
       </button>
 
-      <section className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-slate-500 rounded-md w-full max-w-2xl">
+      <section className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-slate-500 rounded-md w-full max-w-2xl max-h-modal overflow-auto">
         {children}
       </section>
     </div>
