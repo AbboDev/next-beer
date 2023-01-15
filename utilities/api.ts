@@ -3,8 +3,6 @@ import { ParsedUrlQuery } from 'querystring'
 /**
  * The ParamsQuery is parsed before toString() because Punk API
  * gives errors when params are passed empty
- *
- * TODO: move into separate folder
  */
 export const cleanQueryParams = function (
   params: ParsedUrlQuery
@@ -23,7 +21,6 @@ export const cleanQueryParams = function (
   return results
 }
 
-// TODO: move into separate folder
 export const fetchBeers = function <T>(params?: ParsedUrlQuery): Promise<T> {
   let query = ''
 
