@@ -8,6 +8,7 @@ import jsonpath from 'jsonpath'
 import Button from '@/components/button'
 import SearchField from '@/components/search_field'
 import BeerModal from '@/components/beer_modal'
+import { onlyUnique } from '@/utilities/array'
 // TODO: implement wretch library and/or integrated SWR for loading
 
 const PAGINATION_OPTIONS = [10, 25, 50, 80]
@@ -86,10 +87,6 @@ const fetchBeers = function <T>(params?: SearchStateQuery): Promise<T> {
 
     return response.json() as Promise<T>
   })
-}
-
-function onlyUnique<T>(value: T, index: number, self: T[]): boolean {
-  return self.indexOf(value) === index
 }
 
 let filterTimeout: ReturnType<typeof setTimeout>
