@@ -6,10 +6,16 @@ import Button from '@/components/button'
 type Props = {
   beers: Beer[]
   className?: string
+  onBeerSelect: (beer: Beer) => void
   onResetSearch?: MouseEventHandler
 }
 
-export default function BeerList({ beers, className, onResetSearch }: Props) {
+export default function BeerList({
+  beers,
+  className,
+  onBeerSelect,
+  onResetSearch,
+}: Props) {
   const evaluateAlcoholVolume = (abv: number | null): string => {
     if (!abv) {
       return ''
@@ -53,29 +59,43 @@ export default function BeerList({ beers, className, onResetSearch }: Props) {
 
   const beersSectionClassName = ['grid', 'grid-cols-5', 'gap-4']
 
+  const beerClassName = [
+    'p-4',
+    'rounded-md',
+    'bg-slate-200',
+    'shadow-lg',
+    'shadow-slate-800',
+    'cursor-pointer',
+  ]
+
   return (
     <section className={[...beersSectionClassName, className].join(' ')}>
-      {beers.map(({ id, name, tagline, image_url, abv }) => (
-        <div
-          key={id}
-          className="p-4 rounded-md bg-slate-200 shadow-lg shadow-slate-800"
-        >
-          <Image
-            src={image_url || defaultImage}
-            alt={name}
-            width={150}
-            height={150}
-            className="object-contain w-32 h-32 mb-3 mx-auto"
-          />
-          <h3 className="border-t border-slate-300 text-xl">{name}</h3>
-          <strong
-            className={`block mt-2 text-3xl ${evaluateAlcoholVolume(abv)}`}
+      {beers.map((beer) => {
+        const { id, name, tagline, image_url, abv } = beer
+
+        return (
+          <div
+            key={id}
+            className={beerClassName.join(' ')}
+            onClick={() => onBeerSelect(beer)}
           >
-            {abv?.toFixed(1)}°
-          </strong>
-          <p className="mt-2 text-sm">{tagline}</p>
-        </div>
-      ))}
+            <Image
+              src={image_url || defaultImage}
+              alt={name}
+              width={150}
+              height={150}
+              className="object-contain w-32 h-32 mb-3 mx-auto"
+            />
+            <h3 className="border-t border-slate-300 text-xl">{name}</h3>
+            <strong
+              className={`block mt-2 text-3xl ${evaluateAlcoholVolume(abv)}`}
+            >
+              {abv?.toFixed(1)}°
+            </strong>
+            <p className="mt-2 text-sm">{tagline}</p>
+          </div>
+        )
+      })}
     </section>
   )
 }
