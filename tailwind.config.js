@@ -18,7 +18,7 @@ module.exports = {
       },
       maxHeight: {
         modal: 'calc(100% - 32px)',
-        'modal-image': 'min(calc(100vh - 100px - 64px), 100%)',
+        'modal-image': 'min(calc(100vh - 100px - 64px), 500px)',
       },
     },
   },
