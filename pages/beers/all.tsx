@@ -1,12 +1,14 @@
 import { useState, ChangeEvent, useEffect, MouseEvent } from 'react'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 import Layout from '@/components/layout'
 import H1 from '@/components/h1'
 import BeerList from '@/components/beer_list'
 import jsonpath from 'jsonpath'
 import Button from '@/components/button'
 import SearchField from '@/components/search_field'
+import Modal from '@/components/modal'
 // TODO: implement wretch library and/or integrated SWR for loading
 
 const PAGINATION_OPTIONS = [10, 25, 50, 80]
@@ -97,6 +99,8 @@ export default function All({ beers }: Props) {
   const router = useRouter()
 
   const query: SearchStateQuery = router.query
+
+  const [beer, setBeer] = useState<Beer | null>(null)
 
   // TODO: create single component for input with autocomplete
   const [autocomplete, setAutocomplete] = useState<AutocompleteState>({
@@ -218,6 +222,14 @@ export default function All({ beers }: Props) {
     filterTimeout = setTimeout(() => {
       updateQuery(newSearch)
     }, 500)
+  }
+
+  const handleBeerSelect = (beer: Beer): void => {
+    setBeer(beer)
+  }
+
+  const handleCloseModal = (): void => {
+    setBeer(null)
   }
 
   const handlePageChange = (event: MouseEvent, newPage: number): void => {
@@ -350,7 +362,54 @@ export default function All({ beers }: Props) {
         </fieldset>
       </form>
 
-      <BeerList beers={beers} onResetSearch={handleResetSearch} />
+      <BeerList
+        beers={beers}
+        onResetSearch={handleResetSearch}
+        onBeerSelect={handleBeerSelect}
+      />
+
+      {beer && (
+        <Modal onCloseModal={handleCloseModal}>
+          <div className="grid grid-cols-beer-modal grid-rows-beer-modal gap-x-4 gap-y-2 text-white">
+            <Image
+              className="sticky top-0 row-span-5 row-start-1 col-start-2 max-h-modal-image object-contain border-l-white py-1 border-l"
+              src={beer.image_url}
+              alt={beer.name}
+              width={300}
+              height={500}
+            />
+
+            <hgroup>
+              <h2 className="text-xl row-start-1">{beer.name}</h2>
+              <h3 className="text-lg">{beer.tagline}</h3>
+            </hgroup>
+
+            <div className="flex justify-around items-center my-2 bg-white py-1 text-slate-600">
+              <span className="text-xl">{beer.abv}°</span>
+              <div className="text-sm">
+                <span className="block">Anno di produzione:</span>
+                <span>{beer.first_brewed}</span>
+              </div>
+            </div>
+
+            <p>{beer.description}</p>
+
+            <div className="border-t border-t-white pt-2">
+              <h4 className="text-lg mb-2">Il consiglio del Mastro birraio:</h4>
+              <p>{beer.brewers_tips}</p>
+            </div>
+
+            <div className="border-t border-t-white pt-2">
+              <h4 className="text-lg mb-2">Gli abbinamenti perfetti:</h4>
+              <ul className="flex justify-around align-bottom">
+                {beer.food_pairing.map((food, index) => (
+                  <li key={index}>{food}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Modal>
+      )}
     </Layout>
   )
 }
