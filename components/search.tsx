@@ -1,5 +1,5 @@
 import { ChangeEventHandler, MouseEvent } from 'react'
-import { AutocompleteState, SearchState } from '@/pages/beers/all'
+import { AutocompleteState, SearchState } from '@/components/beers'
 import SearchField from '@/components/search_field'
 import Button from '@/components/button'
 
