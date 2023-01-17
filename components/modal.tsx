@@ -57,7 +57,7 @@ export default function Modal({ children, onCloseModal }: Props) {
         &times;
       </button>
 
-      <section className="max-w-modal w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-slate-500 rounded-md w-full max-h-modal overflow-auto">
+      <section className="max-w-modal sm:max-w-modal-desktop absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-slate-500 rounded-md w-full max-h-modal overflow-auto">
         {children}
       </section>
     </div>
