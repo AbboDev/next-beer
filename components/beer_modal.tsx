@@ -9,7 +9,12 @@ type Props = {
 
 export default function BeerModal({ beer, onCloseModal }: Props) {
   const getUnitQuantity = (unit: UnitQuantity): string => {
-    return `${unit.value} ${unit.unit}`
+    let suffix = ''
+    if (unit.unit === 'celsius') {
+      suffix = '°'
+    }
+
+    return `${unit.value}${suffix} ${unit.unit}`
   }
 
   return (
