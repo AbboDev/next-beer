@@ -22,13 +22,13 @@ export default function Search({
 }: Props) {
   return (
     <form action="#" method="GET" className="w-full mb-4 text-left">
-      <fieldset className="grid grid-cols-5 gap-x-4 gap-y-2">
+      <fieldset className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-x-4 gap-y-2">
         <legend className="text-xl text-white block mb-2">
           Ricerca birra per&hellip;
         </legend>
 
         <SearchField
-          className="col-span-2"
+          className="sm:col-span-3 lg:col-span-2"
           id="beerName"
           label="Nome della birra"
           value={search.beerName}
@@ -62,16 +62,20 @@ export default function Search({
         />
 
         <SearchField
-          className="col-span-5"
+          className="sm:col-span-3 lg:col-span-5"
           id="foodPairing"
-          label="Hai qualche piatto a cui vorresti abbinare una buona birra? Prova a cercare l'abbinamento giusto!"
           value={search.foodPairing}
           onChange={onChange}
           placeholder="Ad esempio: chicken, curry, beef, ice cream&hellip;"
           autocomplete={autocomplete.foodPairings}
-        />
+        >
+          Hai qualche piatto a cui vorresti abbinare una buona birra?{' '}
+          <span className="sm:block md:inline-block">
+            Prova a cercare l&apos;abbinamento giusto!
+          </span>
+        </SearchField>
 
-        <div>
+        <div className="lg:col-span-2">
           <label htmlFor="per_page" className="block mb-1">
             Visualizza {search.per_page} birre per pagina:
           </label>
@@ -90,7 +94,7 @@ export default function Search({
           </select>
         </div>
 
-        <div className="col-span-4 grid grid-cols-[1fr_auto_1fr] items-center justify-center self-end">
+        <div className="sm:col-span-2 lg:col-span-3 grid grid-cols-[1fr_auto_1fr] items-center justify-center self-end">
           <Button
             onClick={(event) => onPageChange(event, -1)}
             tag="button"
