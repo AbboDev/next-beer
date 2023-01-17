@@ -16,6 +16,7 @@ type Props = {
 export default function Modal({ children, onCloseModal }: Props) {
   const [modalClassName, setModalClassName] = useState([
     'fixed',
+    'p-4',
     'inset-0',
     'z-100',
     'top-[100px]',
@@ -47,7 +48,7 @@ export default function Modal({ children, onCloseModal }: Props) {
 
   return (
     <div className={modalClassName.join(' ')}>
-      <div className="absolute inset-0 bg-slate-500 opacity-50 p-4"></div>
+      <div className="absolute inset-0 bg-slate-500 opacity-50"></div>
 
       <button
         onClick={handleCloseModal}
@@ -56,7 +57,7 @@ export default function Modal({ children, onCloseModal }: Props) {
         &times;
       </button>
 
-      <section className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-slate-500 rounded-md w-full max-w-2xl max-h-modal overflow-auto">
+      <section className="max-w-modal absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-slate-500 rounded-md w-full max-h-modal overflow-auto">
         {children}
       </section>
     </div>

@@ -17,8 +17,11 @@ module.exports = {
         'beer-modal': '1fr 300px',
       },
       maxHeight: {
-        modal: 'calc(100% - 32px)',
+        modal: 'calc(100% - 128px)',
         'modal-image': 'min(calc(100vh - 100px - 64px), 500px)',
+      },
+      maxWidth: {
+        modal: 'calc(100% - 32px)',
       },
     },
   },
