@@ -38,7 +38,7 @@ export default function Layout({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="sticky px-3 grid-cols-[1fr_auto_1fr] items-center grid top-0 z-40 w-full backdrop-blur border-b border-slate-900/10 dark:border-slate-50/[0.06] bg-white supports-backdrop-blur:bg-white/95 dark:bg-slate-900/75">
+      <header className="sticky px-3 grid-cols-[1fr_auto_1fr] items-center grid top-0 z-40 w-full backdrop-blur border-b border-slate-900/10 dark:border-slate-50/[0.06] bg-white supports-backdrop-blur:bg-white/95 dark:bg-slate-900/75 transition-colors">
         <ColorSchemeButton className="justify-self-end" />
 
         <div className="relative px-5 mx-4">

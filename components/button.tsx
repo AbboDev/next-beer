@@ -25,16 +25,14 @@ export default function Button({
     'py-2',
     'px-3',
     'rounded-md',
-    'bg-white',
-    'text-slate-900',
-    'dark:bg-slate-700',
-    'dark:text-slate-200',
+    'bg-slate-700',
+    'text-slate-200',
+    'shadow-md',
+    'shadow-slate-600',
+    'dark:shadow-slate-900',
     'hover:-translate-x-1',
     'hover:-translate-y-1',
-    // 'hover:text-slate-900',
-    'hover:bg-teal-300',
-    // 'hover:dark:text-slate-200',
-    'hover:dark:bg-teal-700',
+    'hover:bg-teal-700',
   ]
 
   if (disabled) {
@@ -43,8 +41,8 @@ export default function Button({
       'disabled:opacity-50',
       'disabled:translate-x-0',
       'disabled:translate-y-0',
-      'disabled:bg-white',
-      'disabled:dark:bg-slate-700'
+      'disabled:bg-slate-700',
+      'disabled:shadow-none'
     )
   }
 
