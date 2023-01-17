@@ -14,11 +14,11 @@ export const ColorSchemeContext = createContext<Context>({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   toggleColorScheme: () => {},
   // toggleColorScheme: () => {},
-  dark: false,
+  dark: true,
 })
 
 export function ColorScheme({ children }: Props) {
-  const [dark, setDark] = useState(false)
+  const [dark, setDark] = useState(true)
 
   const toggleColorScheme = (on?: boolean) => {
     const isDark = typeof on !== 'boolean' ? !dark : on
