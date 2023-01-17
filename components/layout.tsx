@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 import Head from 'next/head'
 import Logo from '@/components/logo'
 import CustomLink from '@/components/link'
+import ColorSchemeButton from '@/components/color_scheme_button'
 
 export const siteTitle = 'Next Beer'
 
@@ -38,7 +39,9 @@ export default function Layout({
       </Head>
 
       <header className="sticky px-3 grid-cols-[1fr_auto_1fr] items-center grid top-0 z-40 w-full backdrop-blur border-b border-slate-900/10 dark:border-slate-50/[0.06] bg-white supports-backdrop-blur:bg-white/95 dark:bg-slate-900/75">
-        <div className="relative col-start-2 px-5 mx-4">
+        <ColorSchemeButton className="justify-self-end" />
+
+        <div className="relative px-5 mx-4">
           <span className="text-xl text-teal-400 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-center z-10 whitespace-nowrap -skew-x-6">
             {siteTitle}
           </span>
