@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Test Tecnico - Next
 
-## Getting Started
-
-First, run the development server:
+## Comandi
 
 ```bash
-npm run dev
-# or
-yarn dev
+# Qualora non si disponesse di pnpm, è possibile installarlo lanciando il comando:
+# $ npm install -g pnpm
+# in alternativa, tutti i comandi possono essere eseguiti tramite npm
+
+# Installa le dipendenze
+$ pnpm install
+
+# Avvia Next in modalità HMR sulla porta 3000
+$ pnpm dev
+
+# Genera il sito statico
+$ pnpm build
+
+# Compila il sito ed avvia il server Node
+$ pnpm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Dettagli
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+L'applicativo si basa tu NextJS 13 e lo sfrutta interamente in SSR.
+Sono presenti due pagine:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- una homepage statica con soltanto un bottone rimandante alla seconda pagina
+- una pagina dinamica che recupera le birre da Punk API
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+La libreria CSS utilizzata è TailwindCSS 3, sfruttando appieno le sue ottimizzazioni essendo agganciato direttamente ai file TSX (ciò garantisce il caricamento solo delle utilities realmente impiegate)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Come package manager è stato usato [PNPM](https://pnpm.io/it/)
 
-## Learn More
+Docker è attualmente in fase di revisione, essendoci dei conflitti coi node_modules caricati nei vari componenti
 
-To learn more about Next.js, take a look at the following resources:
+Per garantire una coerenza nello sviluppo, è stata utilizzata il [formato standard per le commit di Angular](https://gist.github.com/brianclements/841ea7bffdb01346392c), gestito da husky + commitlint e lint-staged, unito a standard-version per i changelog dinamici
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Ovviamente sono stati predisposti ESlint, Prettier e Stylelint per tenere ordinato e performante il codice
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## TODO
 
-## Deploy on Vercel
+- ~~**Sistemare README** \*~~
+- Organizzare file dentro cartella src/
+- Jest
+- Netlify (SSG)
+- [Commitizen](https://github.com/commitizen/cz-cli)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Task
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Utilizzare NextJS per creare un'applicazione React ed effettuare chiamate API a PunkAPI ([https://punkapi.com/documentation/v2](https://punkapi.com/documentation/v2)) per recuperare l'elenco di birre presenti. Dovranno essere implementate anche le funzionalità di filtro e paginazione risultati.
+
+- ~~**Creare un'applicazione NextJS che visualizzi un elenco di birre da PunkAPI.**~~
+- ~~**Utilizzare TailwindCSS per:**~~
+  - ~~**dare stile alla pagina**~~
+  - ~~**renderla visivamente accattivante.**~~
+- ~~**Consentire all'utente di filtrare l'elenco di birre per**:~~
+  - ~~**nome**~~
+  - ~~**ingredienti**~~
+  - ~~**abbinamenti suggeriti**~~
+- ~~**Implementare la paginazione per visualizzare solo un determinato numero di birre per volta (ad esempio, 10 birre per pagina).**~~
+- ~~**Quando un utente clicca su una birra, visualizzare una finestra modale con informazioni dettagliate su quella birra (ad esempio, nome, ingredienti, metodo di produzione etc.).**~~

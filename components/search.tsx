@@ -1,0 +1,123 @@
+import { ChangeEventHandler, MouseEvent } from 'react'
+import { AutocompleteState, SearchState } from '@/components/beers'
+import SearchField from '@/components/search_field'
+import Button from '@/components/button'
+
+type Props = {
+  search: SearchState
+  autocomplete: AutocompleteState
+  elementLength: number
+  paginationOptions: number[]
+  onChange: ChangeEventHandler
+  onPageChange: (event: MouseEvent, newPage: number) => void
+}
+
+export default function Search({
+  search,
+  autocomplete,
+  elementLength,
+  paginationOptions,
+  onChange,
+  onPageChange,
+}: Props) {
+  return (
+    <form action="#" method="GET" className="w-full mb-4 text-left">
+      <fieldset className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-x-4 gap-y-2">
+        <legend className="text-xl transition-colors dark:text-white block mb-2">
+          Ricerca birra per&hellip;
+        </legend>
+
+        <SearchField
+          className="sm:col-span-3 lg:col-span-2"
+          id="beerName"
+          label="Nome della birra"
+          value={search.beerName}
+          onChange={onChange}
+          placeholder="Prova a digitare Punk IPA, Brewdog, Beer&hellip;"
+          autocomplete={autocomplete.beerNames}
+        />
+
+        <SearchField
+          id="malt"
+          label="Malto usato"
+          value={search.malt}
+          onChange={onChange}
+          autocomplete={autocomplete.malts}
+        />
+
+        <SearchField
+          id="hop"
+          label="Luppoli utilizzati"
+          value={search.hop}
+          onChange={onChange}
+          autocomplete={autocomplete.hops}
+        />
+
+        <SearchField
+          id="yeast"
+          label="Tipologia di lievito"
+          value={search.yeast}
+          onChange={onChange}
+          autocomplete={autocomplete.yeasts}
+        />
+
+        <SearchField
+          className="sm:col-span-3 lg:col-span-5"
+          id="foodPairing"
+          value={search.foodPairing}
+          onChange={onChange}
+          placeholder="Ad esempio: chicken, curry, beef, ice cream&hellip;"
+          autocomplete={autocomplete.foodPairings}
+        >
+          Hai qualche piatto a cui vorresti abbinare una buona birra?{' '}
+          <span className="sm:block md:inline-block">
+            Prova a cercare l&apos;abbinamento giusto!
+          </span>
+        </SearchField>
+
+        <div className="lg:col-span-2">
+          <label htmlFor="per_page" className="block mb-1">
+            Visualizza {search.per_page} birre per pagina:
+          </label>
+          <select
+            id="per_page"
+            name="per_page"
+            onChange={onChange}
+            className="rounded transition-colors text-slate-400 dark:bg-white py-2 px-4 w-full"
+            value={search.per_page}
+          >
+            {paginationOptions.map((value) => (
+              <option value={value} key={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="sm:col-span-2 lg:col-span-3 grid grid-cols-[1fr_auto_1fr] items-center justify-center self-end">
+          <Button
+            onClick={(event) => onPageChange(event, -1)}
+            tag="button"
+            className="w-10 h-10 block justify-self-end text-3xl py-0"
+            disabled={search.page === 1}
+          >
+            &laquo;
+          </Button>
+          <div className="mx-4">Stai vedendo pagina {search.page || 1}</div>
+          <Button
+            onClick={(event) => onPageChange(event, 1)}
+            tag="button"
+            className="w-10 h-10 block justify-self-start text-3xl py-0"
+            disabled={
+              elementLength <
+              (search.per_page ||
+                paginationOptions[paginationOptions.length - 1])
+            }
+          >
+            &raquo;
+          </Button>
+        </div>
+      </fieldset>
+    </form>
+  )
+}

@@ -1,0 +1,31 @@
+services:
+  next:
+    build:
+      dockerfile: ./Dockerfile
+    container_name: next
+    # restart: always
+    ports:
+      - 3000:3000
+    environment:
+      PORT: 3000
+      DOCKER: true
+    networks:
+      - next-network
+    volumes:
+      - ./components:/frontend/components
+      - ./pages:/frontend/pages
+      - ./public:/frontend/public
+      - ./styles:/frontend/styles
+      # - ./test:/frontend/test
+      # - ./types:/frontend/types
+      - ./tsconfig.json:/frontend/tsconfig.json
+      - ./next.config.js:/frontend/next.config.js
+      - ./next-env.d.ts:/frontend/next-env.d.ts
+      - exclude:/frontend/node_modules/
+
+networks:
+  next-network:
+    driver: bridge
+
+volumes:
+  exclude:
