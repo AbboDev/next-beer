@@ -21,7 +21,7 @@ module.exports = {
         'modal-image': 'min(calc(100vh - 100px - 64px), 500px)',
       },
       maxWidth: {
-        modal: 'calc(100% - 32px)',
+        modal: 'min(calc(100% - 32px), 42rem)',
       },
     },
   },
