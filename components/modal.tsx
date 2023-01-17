@@ -52,7 +52,7 @@ export default function Modal({ children, onCloseModal }: Props) {
 
       <button
         onClick={handleCloseModal}
-        className="absolute top-0 right-0 text-7xl flex items-center justify-center leading-10 w-16 h-16 hover:text-white transition-colors"
+        className="absolute top-0 right-0 text-7xl flex items-center justify-center leading-10 w-16 h-16 text-white hover:text-teal-400 transition-colors"
       >
         &times;
       </button>
