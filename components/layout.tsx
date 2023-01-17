@@ -43,7 +43,12 @@ export default function Layout({
             {siteTitle}
           </span>
 
-          <Logo width={80} height={99} strokeWidth={10}></Logo>
+          <Logo
+            width={80}
+            height={99}
+            strokeWidth={10}
+            className="mix-blend-difference"
+          />
         </div>
 
         {!home && (
