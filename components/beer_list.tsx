@@ -57,7 +57,14 @@ export default function BeerList({
     )
   }
 
-  const beersSectionClassName = ['grid', 'grid-cols-5', 'gap-4']
+  const beersSectionClassName = [
+    'grid',
+    'grid-cols-2',
+    'sm:grid-cols-3',
+    'md:grid-cols-4',
+    'xl:grid-cols-5',
+    'gap-4',
+  ]
 
   const beerClassName = [
     'group',
