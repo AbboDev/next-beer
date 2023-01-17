@@ -23,7 +23,7 @@ export default function Layout({
     composedTitle = `${title} - ${composedTitle}`
   }
 
-  let mainClassName = 'max-w-screen-xl mx-auto py-4'
+  let mainClassName = 'max-w-screen-xl mx-auto px-3 py-4'
   if (className) {
     mainClassName += ` ${className}`
   }
@@ -37,13 +37,18 @@ export default function Layout({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="sticky grid-cols-[1fr_auto_1fr] items-center grid top-0 z-40 w-full backdrop-blur border-b border-slate-900/10 dark:border-slate-50/[0.06] bg-white supports-backdrop-blur:bg-white/95 dark:bg-slate-900/75">
+      <header className="sticky px-3 grid-cols-[1fr_auto_1fr] items-center grid top-0 z-40 w-full backdrop-blur border-b border-slate-900/10 dark:border-slate-50/[0.06] bg-white supports-backdrop-blur:bg-white/95 dark:bg-slate-900/75">
         <div className="relative col-start-2 px-5 mx-4">
           <span className="text-xl text-teal-400 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-center z-10 whitespace-nowrap -skew-x-6">
             {siteTitle}
           </span>
 
-          <Logo width={80} height={99} strokeWidth={10}></Logo>
+          <Logo
+            width={80}
+            height={99}
+            strokeWidth={10}
+            className="mix-blend-difference"
+          />
         </div>
 
         {!home && (
@@ -55,7 +60,7 @@ export default function Layout({
 
       <main className={mainClassName}>{children}</main>
 
-      <footer className="text-center p-4 pb-8">
+      <footer className="text-center px-3 pt-4 pb-8">
         Made with <span className="text-red-500">❤</span> by{' '}
         <CustomLink
           href="https://github.com/AbboDev/"

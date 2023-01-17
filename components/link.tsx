@@ -16,11 +16,17 @@ export default function Link(props: Props) {
     'hover:text-teal-400',
   ]
 
-  const className = [...defaultClassName, props?.className].join(' ')
+  const { className, children } = props
+
+  const filteredProps: Props = { ...props }
+  delete filteredProps.children
+  delete filteredProps.className
+
+  const linkClassName = [...defaultClassName, className].join(' ')
 
   return (
-    <NextLink className={className} {...props}>
-      {props.children}
+    <NextLink className={linkClassName} {...filteredProps}>
+      {children}
     </NextLink>
   )
 }

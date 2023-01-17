@@ -57,15 +57,30 @@ export default function BeerList({
     )
   }
 
-  const beersSectionClassName = ['grid', 'grid-cols-5', 'gap-4']
+  const beersSectionClassName = [
+    'grid',
+    'grid-cols-2',
+    'sm:grid-cols-3',
+    'md:grid-cols-4',
+    'xl:grid-cols-5',
+    'gap-4',
+  ]
 
   const beerClassName = [
+    'flex',
+    'flex-col',
+    'group',
     'p-4',
     'rounded-md',
     'bg-slate-200',
     'shadow-lg',
     'shadow-slate-800',
     'cursor-pointer',
+    'transition',
+    'hover:-translate-x-1',
+    'hover:-translate-y-1',
+    'hover:bg-slate-300',
+    'hover:text-slate-500',
   ]
 
   return (
@@ -86,13 +101,15 @@ export default function BeerList({
               height={150}
               className="object-contain w-32 h-32 mb-3 mx-auto"
             />
-            <h3 className="border-t border-slate-300 text-xl">{name}</h3>
+            <h3 className="text-xl transition-colors border-t border-slate-300 group-hover:border-slate-400">
+              {name}
+            </h3>
+            <p className="my-2 text-sm">{tagline}</p>
             <strong
-              className={`block mt-2 text-3xl ${evaluateAlcoholVolume(abv)}`}
+              className={`block mt-auto text-3xl ${evaluateAlcoholVolume(abv)}`}
             >
               {abv?.toFixed(1)}°
             </strong>
-            <p className="mt-2 text-sm">{tagline}</p>
           </div>
         )
       })}

@@ -1,7 +1,7 @@
-import { ChangeEventHandler } from 'react'
+import { ChangeEventHandler, ReactNode } from 'react'
 
 type Props = {
-  label: string
+  label?: string
   id: string
   name?: string
   onChange?: ChangeEventHandler
@@ -9,6 +9,7 @@ type Props = {
   autocomplete?: string[]
   className?: string
   placeholder?: string
+  children?: ReactNode
 }
 
 export default function SearchField({
@@ -20,11 +21,12 @@ export default function SearchField({
   name,
   className,
   placeholder,
+  children,
 }: Props) {
   return (
     <div className={className}>
       <label htmlFor={id} className="block mb-1">
-        {label}
+        {label || children}
       </label>
 
       <input
