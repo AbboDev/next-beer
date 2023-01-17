@@ -19,16 +19,16 @@ export default function BeerModal({ beer, onCloseModal }: Props) {
 
   return (
     <Modal onCloseModal={onCloseModal}>
-      <div className="grid grid-cols-beer-modal grid-rows-beer-modal gap-y-2 gap-x-4 items-start text-white text-left">
+      <div className="grid grid-cols-1 sm:grid-cols-beer-modal grid-rows-beer-modal gap-y-2 gap-x-4 items-start text-white text-left">
         <Image
-          className="row-span-4 row-start-2 col-start-2 max-h-modal-image object-contain py-1"
+          className="sm:row-span-4 sm:row-start-2 sm:col-start-2 max-h-modal-image object-contain mx-auto"
           src={beer.image_url}
           alt={beer.name}
           width={300}
           height={500}
         />
 
-        <hgroup className="row-start-1 col-span-2 text-center">
+        <hgroup className="mt-4 sm:mt-0 sm:row-start-1 sm:col-span-2 text-center">
           <h2 className="text-3xl row-start-1">{beer.name}</h2>
           <h3 className="text-xl">{beer.tagline}</h3>
         </hgroup>
@@ -76,11 +76,9 @@ export default function BeerModal({ beer, onCloseModal }: Props) {
 
         <div>
           <h4 className="text-lg mb-2">Gli abbinamenti perfetti:</h4>
-          <ul>
+          <ul className="list-disc list-inside">
             {beer.food_pairing.map((food, index) => (
-              <li key={index} className="mt-2 block">
-                {food}
-              </li>
+              <li key={index}>{food}</li>
             ))}
           </ul>
         </div>
@@ -91,7 +89,7 @@ export default function BeerModal({ beer, onCloseModal }: Props) {
           <p>Volume finale: {getUnitQuantity(beer.volume)}</p>
 
           <h5 className="mt-2 text-lg">Ammostamento</h5>
-          <ul>
+          <ul className="list-disc list-inside">
             {beer.method.mash_temp.map((mash, index) => (
               <li key={index.toString()}>
                 A {getUnitQuantity(mash.temp)} per {mash.duration} minuti
@@ -114,8 +112,8 @@ export default function BeerModal({ beer, onCloseModal }: Props) {
 
         <div className="mt-2 border-t border-white pt-2">
           <h4 className="text-2xl">Gli ingredienti</h4>
-          <h5 className="mt-2 text-lg">Malti</h5>
-          <ul>
+          <h5 className="my-2 text-lg">Malti</h5>
+          <ul className="list-disc list-inside">
             {beer.ingredients.malt.map((malt) => (
               <li key={malt.name}>
                 {malt.name}: {getUnitQuantity(malt.amount)}
@@ -123,20 +121,20 @@ export default function BeerModal({ beer, onCloseModal }: Props) {
             ))}
           </ul>
 
-          <h5 className="mt-2 text-lg">Luppoli</h5>
-          <ul>
-            {beer.ingredients.hops.map((hop) => (
-              <li key={hop.name}>
-                <span className="block">
+          <h5 className="my-2 text-lg">Luppoli</h5>
+          <ul className="list-disc list-inside">
+            {beer.ingredients.hops.map((hop, index) => (
+              <li key={hop.name} className={index > 0 ? 'mt-2' : ''}>
+                <span className="inline-block">
                   {hop.name}: {getUnitQuantity(hop.amount)}
                 </span>
-                <span className="block">Aggiunto a {hop.add}</span>
-                <span className="block">Dona una nota {hop.attribute}</span>
+                <small className="block">Aggiunto a {hop.add}</small>
+                <small className="block">Dona una nota {hop.attribute}</small>
               </li>
             ))}
           </ul>
 
-          <h5 className="mt-2 text-lg">Lievito</h5>
+          <h5 className="my-2 text-lg">Lievito</h5>
           <p>{beer.ingredients.yeast}</p>
         </div>
       </div>
