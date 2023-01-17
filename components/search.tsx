@@ -23,7 +23,7 @@ export default function Search({
   return (
     <form action="#" method="GET" className="w-full mb-4 text-left">
       <fieldset className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-x-4 gap-y-2">
-        <legend className="text-xl text-white block mb-2">
+        <legend className="text-xl transition-colors dark:text-white block mb-2">
           Ricerca birra per&hellip;
         </legend>
 
@@ -83,7 +83,7 @@ export default function Search({
             id="per_page"
             name="per_page"
             onChange={onChange}
-            className="rounded bg-white py-2 px-4 w-full"
+            className="rounded transition-colors text-slate-400 dark:bg-white py-2 px-4 w-full"
             value={search.per_page}
           >
             {paginationOptions.map((value) => (
@@ -98,7 +98,7 @@ export default function Search({
           <Button
             onClick={(event) => onPageChange(event, -1)}
             tag="button"
-            className="w-9 block justify-self-end text-xl py-1"
+            className="w-10 h-10 block justify-self-end text-3xl py-0"
             disabled={search.page === 1}
           >
             &laquo;
@@ -107,7 +107,7 @@ export default function Search({
           <Button
             onClick={(event) => onPageChange(event, 1)}
             tag="button"
-            className="w-9 block justify-self-start text-xl py-1"
+            className="w-10 h-10 block justify-self-start text-3xl py-0"
             disabled={
               elementLength <
               (search.per_page ||

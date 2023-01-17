@@ -36,7 +36,7 @@ export default function SearchField({
         value={value}
         placeholder={placeholder}
         onChange={onChange}
-        className="rounded bg-white py-2 px-4 w-full"
+        className="rounded transition-colors text-slate-400 dark:bg-white py-2 px-4 w-full"
         list={`${id}-autocomplete`}
       />
 
