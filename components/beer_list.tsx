@@ -67,6 +67,8 @@ export default function BeerList({
   ]
 
   const beerClassName = [
+    'flex',
+    'flex-col',
     'group',
     'p-4',
     'rounded-md',
@@ -102,12 +104,12 @@ export default function BeerList({
             <h3 className="text-xl transition-colors border-t border-slate-300 group-hover:border-slate-400">
               {name}
             </h3>
+            <p className="my-2 text-sm">{tagline}</p>
             <strong
-              className={`block mt-2 text-3xl ${evaluateAlcoholVolume(abv)}`}
+              className={`block mt-auto text-3xl ${evaluateAlcoholVolume(abv)}`}
             >
               {abv?.toFixed(1)}°
             </strong>
-            <p className="mt-2 text-sm">{tagline}</p>
           </div>
         )
       })}
